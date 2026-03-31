@@ -24,7 +24,7 @@ async function searchReverb({ query, maxPrice, minPrice, condition, maxListings 
   if (minPrice) input.minPrice = Number(minPrice);
   if (condition) input.condition = condition;
 
-  return runActor('lulzasaur9192~reverb-scraper', input);
+  return runActor('lulzasaur~reverb-scraper', input);
 }
 
 async function searchTCG({ query, productLine, maxListings = 25 }) {
@@ -34,7 +34,7 @@ async function searchTCG({ query, productLine, maxListings = 25 }) {
   };
   if (productLine) input.productLine = productLine;
 
-  return runActor('lulzasaur9192~tcgplayer-scraper', input);
+  return runActor('lulzasaur~tcgplayer-scraper', input);
 }
 
 function computePriceStats(items, priceField) {

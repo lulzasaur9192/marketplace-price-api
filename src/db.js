@@ -47,6 +47,17 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_api_events_endpoint ON api_events(endpoint);
   CREATE INDEX IF NOT EXISTS idx_api_events_created_at ON api_events(created_at);
   CREATE INDEX IF NOT EXISTS idx_api_events_api_key ON api_events(api_key);
+
+  CREATE TABLE IF NOT EXISTS search_cache (
+    cache_key TEXT PRIMARY KEY,
+    marketplace TEXT NOT NULL,
+    query TEXT NOT NULL,
+    results TEXT NOT NULL,
+    result_count INTEGER,
+    cached_at TEXT DEFAULT (datetime('now')),
+    expires_at TEXT NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_cache_expires ON search_cache(expires_at);
 `);
 
 // Add call_count column to api_keys if it doesn't exist
@@ -56,4 +67,19 @@ try {
   db.exec('ALTER TABLE api_keys ADD COLUMN call_count INTEGER DEFAULT 0');
 }
 
+const getCache = db.prepare('SELECT results FROM search_cache WHERE cache_key = ? AND expires_at > datetime(\'now\')');
+const setCache = db.prepare(`
+  INSERT OR REPLACE INTO search_cache (cache_key, marketplace, query, results, result_count, expires_at)
+  VALUES (?, ?, ?, ?, ?, datetime('now', '+' || ? || ' seconds'))
+`);
+const purgeExpiredCache = db.prepare("DELETE FROM search_cache WHERE expires_at < datetime('now')");
+
 module.exports = db;
+module.exports.getCache = (key) => {
+  const row = getCache.get(key);
+  return row ? JSON.parse(row.results) : null;
+};
+module.exports.setCache = (key, marketplace, query, results, ttlSeconds) => {
+  setCache.run(key, marketplace, query, JSON.stringify(results), results.length, ttlSeconds);
+};
+module.exports.purgeExpiredCache = () => purgeExpiredCache.run();

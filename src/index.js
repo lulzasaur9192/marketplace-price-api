@@ -1,6 +1,9 @@
 const express = require('express');
 const reverbRoutes = require('./routes/reverb');
 const tcgRoutes = require('./routes/tcg');
+const offerupRoutes = require('./routes/offerup');
+const poshmarkRoutes = require('./routes/poshmark');
+const unifiedRoutes = require('./routes/unified');
 const alertRoutes = require('./routes/alerts');
 const analyticsRoutes = require('./routes/analytics');
 const { createEventLogger } = require('./middleware/logger');
@@ -23,6 +26,9 @@ app.use('/analytics', analyticsRoutes);
 // Search endpoints
 app.use('/reverb', reverbRoutes);
 app.use('/tcg', tcgRoutes);
+app.use('/offerup', offerupRoutes);
+app.use('/poshmark', poshmarkRoutes);
+app.use('/search', unifiedRoutes);
 
 // Alerts require API key auth (handled inside router)
 app.use('/alerts', alertRoutes);
@@ -40,7 +46,7 @@ async function start() {
   startCron();
   app.listen(PORT, () => {
     console.log(`Marketplace Price API running on port ${PORT}`);
-    console.log(`Endpoints: /health, /reverb/search, /reverb/price-history, /tcg/search, /tcg/price, /alerts`);
+    console.log(`Endpoints: /health, /search, /reverb/search, /reverb/price-history, /tcg/search, /tcg/price, /offerup/search, /poshmark/search, /alerts`);
   });
 }
 

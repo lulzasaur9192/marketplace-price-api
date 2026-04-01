@@ -39,6 +39,10 @@ Test: `curl http://localhost:3000/health`
 - `GET /reverb/price-history?q=...` — price range stats for Reverb
 - `GET /tcg/search?q=...&productLine=...` — search TCGPlayer cards
 - `GET /tcg/price?cardName=...` — card price stats
+- `GET /offerup/search?q=...&maxPrice=...&minPrice=...` — search OfferUp listings
+- `GET /poshmark/search?q=...&maxPrice=...&minPrice=...&size=...` — search Poshmark listings
+- `GET /search?q=...&marketplaces=reverb,tcg,offerup,poshmark` — unified cross-marketplace search with price stats
+- `GET /analytics/events` — API usage analytics (requires x-api-key)
 - `POST /alerts` — create price alert (requires x-api-key header)
 - `GET /alerts` — list alerts
 - `GET /alerts/:id` — get alert

@@ -73,6 +73,12 @@ function startCron() {
   });
 
   console.log('Alert cron started (every 30 min)');
+
+  // Purge expired cache entries every hour
+  cron.schedule('0 * * * *', () => {
+    const deleted = db.purgeExpiredCache();
+    if (deleted.changes > 0) console.log(`Cache cleanup: removed ${deleted.changes} expired entries`);
+  });
 }
 
 module.exports = { startCron };

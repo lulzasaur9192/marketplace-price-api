@@ -26,6 +26,7 @@ app.use('/analytics', analyticsRoutes);
 // Search endpoints
 app.use('/reverb', reverbRoutes);
 app.use('/tcg', tcgRoutes);
+app.use('/tcgplayer', tcgRoutes);  // Alias: /tcgplayer/search → same as /tcg/search
 app.use('/offerup', offerupRoutes);
 app.use('/poshmark', poshmarkRoutes);
 app.use('/search', unifiedRoutes);
